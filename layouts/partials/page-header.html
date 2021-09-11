@@ -13,20 +13,35 @@
         <h3 class="mb-3 text-dark font-weight-bold">{{.Title | markdownify}}</h3>
         {{ end }}
 
-
         <ul class="list-inline breadcrumb-menu">
-        {{ $url := replace .Permalink ( printf "%s" site.BaseURL) "" }}
-        {{ $.Scratch.Add "path" site.BaseURL }}
-        <li class="list-inline-item"><a href="{{site.BaseURL | relLangURL}}">Home</a></li>
-        {{ range $index, $element := split $url "/" }}
-        {{ $.Scratch.Add "path" $element }}
-        {{ if (ne $element "") }}
-        <li class="list-inline-item">/ &nbsp; <a href="{{ $.Scratch.Get `path` }}">{{ . | humanize }}</a></li>
-        {{ $.Scratch.Add "path" "/" }}
-        {{ end }}
-        {{ end }}
+          {{ template "breadcrumbnav" (dict "p1" . "p2" .) }}
         </ul>
+        {{ define "breadcrumbnav" }}
+        {{ if .p1.Parent }}
+        {{ template "breadcrumbnav" (dict "p1" .p1.Parent "p2" .p2 ) }}
+        {{ else if not .p1.IsHome }}
+        {{ template "breadcrumbnav" (dict "p1" .p1.Site.Home "p2" .p2 ) }}
+        {{ end }}
+        <li class="list-inline-item">
+          {{ if eq (len .p1.Title) 0 }}
+          <a href="{{ .p1.Permalink }}" class="list-inline-item"> Home </a>
+          {{ else if eq .p1 .p2 }}
+          <a href="{{ .p1.Permalink }}" class="list-inline-item not-first-item">{{ .p1.Title }}</a>
+          {{ else }}
+          <a href="{{ .p1.Permalink }}" class="list-inline-item not-first-item">{{ .p1.Title }}</a>
+          {{ end }}
+        </li>
+        {{ end }}
+
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  .not-first-item::before {
+    padding: .5rem;
+    content: "/\00a0";
+    color: #728fcb;
+  }
+</style>
