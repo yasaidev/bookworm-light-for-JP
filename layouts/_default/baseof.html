@@ -5,7 +5,8 @@
 <body>
   {{ partialCached "preloader.html" . }}
   {{ partial "header.html" . }}
-  {{if and (not .IsHome) (ne .Section "blog") (ne .Permalink (`about/` | absURL)) (ne .Permalink (`search/` | absURL)) }}
+  {{if and (not .IsHome) (ne .Section "blog") (ne .Section "posts") (ne .Permalink (`about/` | absURL)) (ne .Permalink
+  (`search/` | absURL)) }}
   {{ partial "page-header.html" . }}
   {{end}}
   {{ block "main" . }}{{ end }}
