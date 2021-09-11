@@ -9,7 +9,8 @@
             <span class="mark">
               <script>
                 var keyword = (window.location.search).substr(3);
-                var result = keyword.replace("+", " ");
+                var decoded_keyword = decodeURI(keyword)
+                var result = decoded_keyword.replace("+", " ");
                 document.write(result);
               </script>
             </span>
@@ -22,7 +23,7 @@
           <script id="search-result-template" type="text/x-js-template">
             <div class="col-lg-4 col-md-6 mb-4">
             <article class="card post-card" id="summary-${key}">
-              ${ isset image }<img loading="lazy" class="w-100" src="{{site.BaseURL}}${image}" alt="${title}">${end}
+              ${ isset image }<img loading="lazy" class="w-100" src=${image} alt="${title}">${end}
               <div class="card-body">
                 <h3 class="h4 mb-4">
                   <a class="post-title" href="${link}">${title}</a>
@@ -38,6 +39,6 @@
 </section>
 
 <!-- Search index -->
-<script>var indexURL = {{"index.json" | absURL}}</script>
+<script>var indexURL = {{ "index.json" | absURL}}</script>
 
 {{ end }}
